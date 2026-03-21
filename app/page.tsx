@@ -40,7 +40,7 @@ export default function StartPage() {
         className="bg-white text-black px-8 py-4 rounded-xl text-xl hover:bg-gray-200 transition"
       >
         {nextPath === "/puzzles/1"
-          ? "🔦 Start"
+          ? "🔦 St"
           : nextPath === "/reveal"
           ? "🌟 Reveal"
           : "🔦 Continue"}
