@@ -354,31 +354,28 @@ function PuzzleTwo({ router }: any) {
       </svg>
 
       {/* Stars */}
-      {starPositions.map((star, i) => (
-        <div
-          key={i}
-          className={`absolute z-10 text-3xl transition-all duration-300 ${
-            solvedStars[i] ? "text-yellow-400" : "text-white"
-          }`}
-          style={{
-            top: star.top,
-            left: star.left,
-            opacity:
-              solved
-                ? 1
-                : Math.hypot(
-                    pos.x - (parseFloat(star.left) / 100) * window.innerWidth,
-                    pos.y - (parseFloat(star.top) / 100) * window.innerHeight
-                  ) < 150
-                ? 1
-                : 0,
-            cursor: "pointer",
-          }}
-          onClick={() => setActiveStar(i)}
-        >
-          ⭐
-        </div>
-      ))}
+      {starPositions.map((star, i) => {
+  const near = starPixels[i] 
+    ? Math.hypot(pos.x - starPixels[i].x, pos.y - starPixels[i].y) < 150 
+    : false;
+  return (
+    <div
+      key={i}
+      className={`absolute z-30 text-3xl transition-all duration-300 ${
+        solvedStars[i] ? "text-yellow-400" : "text-white"
+      }`}
+      style={{
+        top: star.top,
+        left: star.left,
+        opacity: solved ? 1 : near ? 1 : 0,
+        cursor: "pointer",
+      }}
+      onClick={() => setActiveStar(i)}
+    >
+      ⭐
+    </div>
+  );
+})}
 
       {/* Active star question */}
       {activeStar !== null && !solved && (
