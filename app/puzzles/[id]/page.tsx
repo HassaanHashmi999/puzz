@@ -128,7 +128,7 @@ function PuzzleOne({ router }: any) {
           <h1 className="text-2xl font-bold text-white mb-4">
             🔒 Gate 1 Locked
           </h1>
-          <p className="text-gray-300 mb-6">Enter password Plase Jaani</p>
+          <p className="text-gray-300 mb-6">Enter password Please Jaani 💞</p>
           <input
             type="password"
             className="bg-black border border-white p-3 text-white w-64 mb-4 rounded"
