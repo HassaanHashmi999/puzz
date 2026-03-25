@@ -32,7 +32,7 @@ export default function StartPage() {
   return (
     <main className="h-screen w-screen bg-black text-white flex flex-col items-center justify-center">
       <h1 className="text-5xl font-bold mb-6">🌑 Into The Darkness</h1>
-      <p className="text-gray-400 mb-10">Find what is hidden in the dark...</p>
+      <p className="text-gray-400 mb-10">Ao Beghum, Garden ko Sunlight Dain? Okay?</p>
 
       {/* Normal start/continue button */}
       <Link
@@ -40,7 +40,7 @@ export default function StartPage() {
         className="bg-white text-black px-8 py-4 rounded-xl text-xl hover:bg-gray-200 transition"
       >
         {nextPath === "/puzzles/1"
-          ? "🔦 St"
+          ? "🔦 Start"
           : nextPath === "/reveal"
           ? "🌟 Reveal"
           : "🔦 Continue"}
