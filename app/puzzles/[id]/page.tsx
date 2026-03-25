@@ -42,65 +42,119 @@ export default function PuzzlePage() {
 }
 // ================== MAIN ROUTER ==================
 
-
-
-
-
 function PuzzleOne({ router }: any) {
-  const [pos, setPos] = useState({ x: 300, y: 300 })
-  const [code, setCode] = useState("")
-  const [msg, setMsg] = useState("")
-  const [solved, setSolved] = useState(false)
+  // Password gate states
+  const [password, setPassword] = useState("");
+  const [passwordError, setPasswordError] = useState("");
+  const [passwordVerified, setPasswordVerified] = useState(false);
+
+  // Puzzle states (unchanged)
+  const [pos, setPos] = useState({ x: 300, y: 300 });
+  const [code, setCode] = useState("");
+  const [msg, setMsg] = useState("");
+  const [solved, setSolved] = useState(false);
   const [emojiData, setEmojiData] = useState<{
-    positions: Array<{ top: number; left: number }>
-    emojis: string[]
-  } | null>(null)
+    positions: Array<{ top: number; left: number }>;
+    emojis: string[];
+  } | null>(null);
 
+  // Mouse move for torch effect (only active when puzzle is shown)
   useEffect(() => {
-    const move = (e: MouseEvent) => setPos({ x: e.clientX, y: e.clientY })
-    window.addEventListener("mousemove", move)
-    return () => window.removeEventListener("mousemove", move)
-  }, [])
+    if (!passwordVerified) return;
+    const move = (e: MouseEvent) => setPos({ x: e.clientX, y: e.clientY });
+    window.addEventListener("mousemove", move);
+    return () => window.removeEventListener("mousemove", move);
+  }, [passwordVerified]);
 
+  // Generate emoji grid (only once, after password verified)
   useEffect(() => {
+    if (!passwordVerified) return;
+
     const emojis = [
-      "🧸","🐱","🐶","🌸","✨","🍓","🐼","🦋","🍭","🐰",
-      "🌈","🍩","🐹","🎀","🍒","🧁","🐻","💖","🍬","🌼",
-      "🐥","🍉","🌺","🐨","🍫","💫","🍪","🐯","🌻","🎈",
-      "🍇","🐸","🫧","🧃","🐧","💗","🍡","🦄","🌙","⭐",
-      "🍕","🐢","🌷","🐝","🍔","🪄","🍟","🐙","🧸","💝",
-      "🍎","🐳","🌹","🧁","🐬","🍰","🐞","💘","🍑","🐤",
-      "🍌","🐠","🍍","🐛","🍨","🐿️","🍓","🦊","🌟","🐌",
-      "🫶","🍧","🦖","🍿","🐲","🍪","🐕","🐈","💞","🌸",
-      "🍄","🐚","🧩","💜","🐱‍👤","🌵","💙","🍋","🧃","🐡"
-    ]
+      "🧸", "🐱", "🐶", "🌸", "✨", "🍓", "🐼", "🦋", "🍭", "🐰",
+      "🌈", "🍩", "🐹", "🎀", "🍒", "🧁", "🐻", "💖", "🍬", "🌼",
+      "🐥", "🍉", "🌺", "🐨", "🍫", "💫", "🍪", "🐯", "🌻", "🎈",
+      "🍇", "🐸", "🫧", "🧃", "🐧", "💗", "🍡", "🦄", "🌙", "⭐",
+      "🍕", "🐢", "🌷", "🐝", "🍔", "🪄", "🍟", "🐙", "🧸", "💝",
+      "🍎", "🐳", "🌹", "🧁", "🐬", "🍰", "🐞", "💘", "🍑", "🐤",
+      "🍌", "🐠", "🍍", "🐛", "🍨", "🐿️", "🍓", "🦊", "🌟", "🐌",
+      "🫶", "🍧", "🦖", "🍿", "🐲", "🍪", "🐕", "🐈", "💞", "🌸",
+      "🍄", "🐚", "🧩", "💜", "🐱‍👤", "🌵", "💙", "🍋", "🧃", "🐡",
+    ];
 
     const positions = Array.from({ length: 100 }).map(() => ({
       top: Math.random() * 95,
       left: Math.random() * 95,
-    }))
+    }));
 
-    const assignedEmojis = positions.map(() => 
-      emojis[Math.floor(Math.random() * emojis.length)]
-    )
+    const assignedEmojis = positions.map(
+      () => emojis[Math.floor(Math.random() * emojis.length)]
+    );
 
-    setEmojiData({ positions, emojis: assignedEmojis })
-  }, [])
+    setEmojiData({ positions, emojis: assignedEmojis });
+  }, [passwordVerified]);
 
+  // Puzzle logic
   const check = () => {
-    
     if (code.trim() === "137") {
-      setMsg("✨ Correct...")
-      setSolved(true)
+      setMsg("✨ Correct...");
+      setSolved(true);
       completePuzzle(1);
       setTimeout(() => {
         router.push("/puzzles/2");
       }, 9000);
     } else {
-      setMsg("❌ Wrong code")
+      setMsg("❌ Wrong code");
     }
+  };
+
+  // Password verification
+  const verifyPassword = () => {
+    // Change this to whatever password you want
+    const correctPassword = "BeghumJee";
+    if (password.trim() === correctPassword) {
+      setPasswordVerified(true);
+      setPasswordError("");
+    } else {
+      setPasswordError("Incorrect password. Phir se karain Jee.");
+    }
+  };
+
+  // Password screen
+  if (!passwordVerified) {
+    return (
+      <main className="relative w-screen h-screen overflow-hidden bg-black flex items-center justify-center">
+        <div className="bg-white/10 backdrop-blur-sm p-8 rounded-xl shadow-2xl text-center">
+          <h1 className="text-2xl font-bold text-white mb-4">
+            🔒 Gate 1 Locked
+          </h1>
+          <p className="text-gray-300 mb-6">Enter password Plase Jaani</p>
+          <input
+            type="password"
+            className="bg-black border border-white p-3 text-white w-64 mb-4 rounded"
+            placeholder="password..."
+            value={password}
+            onChange={(e) => setPassword(e.target.value)}
+            onKeyDown={(e) => e.key === "Enter" && verifyPassword()}
+            autoFocus
+          />
+          <div>
+            <button
+              onClick={verifyPassword}
+              className="bg-white text-black px-6 py-2 rounded font-medium hover:bg-gray-200 transition"
+            >
+              Unlock
+            </button>
+          </div>
+          {passwordError && (
+            <p className="text-red-400 mt-3 text-sm">{passwordError}</p>
+          )}
+        </div>
+      </main>
+    );
   }
 
+  // Loading while emoji data is being generated (only for a split second)
   if (!emojiData) {
     return (
       <main className="relative w-screen h-screen overflow-hidden bg-black">
@@ -108,16 +162,17 @@ function PuzzleOne({ router }: any) {
           Loading puzzle...
         </div>
       </main>
-    )
+    );
   }
 
+  // The original puzzle UI
   return (
     <main
       className={`relative w-screen h-screen overflow-hidden cursor-none transition-all duration-1000 ${
         solved ? "bg-white" : "bg-black"
       }`}
     >
-      {/* 🔢 hidden numbers */}
+      {/* Hidden numbers */}
       <div
         className={`absolute top-[18%] left-[12%] text-xl z-10 font-bold ${
           solved ? "text-red-600" : "text-gray-300"
@@ -140,7 +195,7 @@ function PuzzleOne({ router }: any) {
         7
       </div>
 
-      {/* fake numbers */}
+      {/* Fake numbers */}
       <div
         className={`absolute top-[30%] left-[80%] z-10 ${
           solved ? "text-black opacity-80" : "text-gray-400 opacity-40"
@@ -177,7 +232,7 @@ function PuzzleOne({ router }: any) {
         4
       </div>
 
-      {/* 💖 static emojis */}
+      {/* Static emojis */}
       {emojiData.positions.map((pos, i) => (
         <div
           key={i}
@@ -188,14 +243,14 @@ function PuzzleOne({ router }: any) {
         </div>
       ))}
 
-      {/* hint */}
+      {/* Hint */}
       {!solved && (
         <div className="absolute bottom-[22%] left-[40%] text-lg font-bold text-white z-10">
           not all numbers matter...
         </div>
       )}
 
-      {/* input */}
+      {/* Input */}
       {!solved && (
         <div className="absolute bottom-10 left-1/2 -translate-x-1/2 z-10">
           <input
@@ -214,7 +269,7 @@ function PuzzleOne({ router }: any) {
         </div>
       )}
 
-      {/* 🔦 torch overlay */}
+      {/* Torch overlay */}
       {!solved && (
         <div
           className="pointer-events-none absolute inset-0 z-20"
@@ -224,25 +279,30 @@ function PuzzleOne({ router }: any) {
         />
       )}
 
-      {/* 🌕 light up */}
+      {/* Light restoration */}
       {solved && (
         <div className="absolute inset-0 flex items-center justify-center text-5xl font-bold z-20">
           🌕 LIGHT RESTORED
         </div>
       )}
     </main>
-  )
+  );
 }
 
+
 function PuzzleTwo({ router }: any) {
+  // Password gate
+  const [password, setPassword] = useState("");
+  const [passwordError, setPasswordError] = useState("");
+  const [passwordVerified, setPasswordVerified] = useState(false);
+
+  // Puzzle states
   const [pos, setPos] = useState({ x: 300, y: 300 }); // mouse
   const [activeStar, setActiveStar] = useState<number | null>(null);
   const [answers, setAnswers] = useState<string[]>(Array(7).fill(""));
   const [solvedStars, setSolvedStars] = useState<boolean[]>(Array(7).fill(false));
   const [solved, setSolved] = useState(false);
   const [starPixels, setStarPixels] = useState<{ x: number; y: number }[]>([]);
-
-  const routerNav = router;
 
   // Star positions in % (forming letter F)
   const starPositions = [
@@ -277,15 +337,17 @@ function PuzzleTwo({ router }: any) {
   // Correct answers
   const correctAnswers = ["daisy", "maltesers", "innovative", "dog", "f", "tea", "f"];
 
-  // Mouse position
+  // Mouse position – only after password verified
   useEffect(() => {
+    if (!passwordVerified) return;
     const move = (e: MouseEvent) => setPos({ x: e.clientX, y: e.clientY });
     window.addEventListener("mousemove", move);
     return () => window.removeEventListener("mousemove", move);
-  }, []);
+  }, [passwordVerified]);
 
-  // Calculate pixel positions of stars on mount and resize
+  // Calculate pixel positions of stars on mount and resize – only after password verified
   useEffect(() => {
+    if (!passwordVerified) return;
     const calculatePositions = () => {
       const pixels = starPositions.map(star => ({
         x: (parseFloat(star.left) / 100) * window.innerWidth,
@@ -297,7 +359,7 @@ function PuzzleTwo({ router }: any) {
     calculatePositions();
     window.addEventListener("resize", calculatePositions);
     return () => window.removeEventListener("resize", calculatePositions);
-  }, []);
+  }, [passwordVerified]);
 
   // Handle answer submission
   const handleSubmit = (index: number) => {
@@ -318,6 +380,52 @@ function PuzzleTwo({ router }: any) {
     }
   };
 
+  // Password verification
+  const verifyPassword = () => {
+    const correctPassword = "ilovepuzzles"; // change as needed
+    if (password.trim() === correctPassword) {
+      setPasswordVerified(true);
+      setPasswordError("");
+    } else {
+      setPasswordError("Incorrect password. Try again.");
+    }
+  };
+
+  // Password screen
+  if (!passwordVerified) {
+    return (
+      <main className="relative w-screen h-screen overflow-hidden bg-black flex items-center justify-center">
+        <div className="bg-white/10 backdrop-blur-sm p-8 rounded-xl shadow-2xl text-center">
+          <h1 className="text-2xl font-bold text-white mb-4">
+            🔒 Gate 2 Locked Beghum Jee
+          </h1>
+          <p className="text-gray-300 mb-6">Enter password to play</p>
+          <input
+            type="password"
+            className="bg-black border border-white p-3 text-white w-64 mb-4 rounded"
+            placeholder="password..."
+            value={password}
+            onChange={(e) => setPassword(e.target.value)}
+            onKeyDown={(e) => e.key === "Enter" && verifyPassword()}
+            autoFocus
+          />
+          <div>
+            <button
+              onClick={verifyPassword}
+              className="bg-white text-black px-6 py-2 rounded font-medium hover:bg-gray-200 transition"
+            >
+              Unlock
+            </button>
+          </div>
+          {passwordError && (
+            <p className="text-red-400 mt-3 text-sm">{passwordError}</p>
+          )}
+        </div>
+      </main>
+    );
+  }
+
+  // The puzzle UI (only after password verified)
   return (
     <main className={`relative w-screen h-screen overflow-hidden cursor-none transition-all duration-1000 ${solved ? "bg-white" : "bg-black"}`}>
       {/* Torch overlay */}
@@ -418,6 +526,7 @@ function PuzzleTwo({ router }: any) {
     </main>
   );
 }
+
 function PuzzleThree() {
   const GRID = 6
   const MESSAGE = "LIGHT FOUND"
