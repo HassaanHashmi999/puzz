@@ -328,14 +328,14 @@ function PuzzleTwo({ router }: any) {
     "Flowers, she Likes (-----)",               // star 0
     "Her Favorite Chocolate? (mal...)",          // star 1
     "Hamna ka Mind is what? (snowfall with rainbow)?", // star 2
-    "What animal barks?",                         // star 3
+    "______ Riding",                         // star 3
     "First letter of 'flower'?",                  // star 4
-    "What do you drink in the morning?",          // star 5
-    "What letter starts 'Fox'?"                   // star 6
+    "Cinema Movie?",          // star 5
+    "First Date: Alto par gai thay Yaad hai?"                   // star 6
   ];
 
   // Correct answers
-  const correctAnswers = ["daisy", "maltesers", "innovative", "dog", "f", "tea", "f"];
+  const correctAnswers = ["daisy", "maltesers", "innovative", "horse", "f", "sardaar ji 3", "juicy chuck"];
 
   // Mouse position – only after password verified
   useEffect(() => {
