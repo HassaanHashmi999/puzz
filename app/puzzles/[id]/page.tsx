@@ -627,7 +627,7 @@ const router = useRouter()
       const alreadyFound = foundLetters.filter(l => l === cell.letter).length
 
       if (alreadyFound >= totalNeeded) {
-        setMessage(`"${cell.letter}" already found`)
+        setMessage(`"${cell.letter}" phir se mil gaya! Try finding other letters.`)
       } else {
         // append letter in discovery order
         setFoundLetters(prev => {
@@ -733,7 +733,7 @@ const router = useRouter()
     />
     <button
       onClick={() => {
-  if (finalInput.toUpperCase().trim() === MESSAGE) {
+  if (finalInput.trim().toUpperCase() === MESSAGE.toUpperCase()) {
     setEnding(true);
     setTimeout(() => {
       completePuzzle(3);
@@ -756,8 +756,8 @@ const router = useRouter()
       {ending && (
         <div className="text-center">
           <div className="text-6xl mb-6">🌕</div>
-          <h1 className="text-5xl font-bold mb-4">YOU ESCAPED</h1>
-          <p className="text-gray-400">The light was always real.</p>
+          <h1 className="text-5xl font-bold mb-4">MoonLight</h1>
+          <p className="text-gray-400">Wow ah ha.</p>
         </div>
       )}
     </main>
