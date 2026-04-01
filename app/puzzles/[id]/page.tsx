@@ -382,7 +382,7 @@ function PuzzleTwo({ router }: any) {
 
   // Password verification
   const verifyPassword = () => {
-    const correctPassword = "ilovepuzzles"; // change as needed
+    const correctPassword = "ohoshit"; // change as needed
     if (password.trim() === correctPassword) {
       setPasswordVerified(true);
       setPasswordError("");
@@ -520,7 +520,7 @@ function PuzzleTwo({ router }: any) {
       {/* Solved message */}
       {solved && (
         <div className="absolute inset-0 flex items-center justify-center text-5xl font-bold z-40">
-          🌟 All stars solved! Moving next...
+          🌟 All stars solved! Agay barhain...
         </div>
       )}
     </main>
@@ -529,7 +529,7 @@ function PuzzleTwo({ router }: any) {
 
 function PuzzleThree() {
   const GRID = 6
-  const MESSAGE = "LIGHT FOUND"
+  const MESSAGE = "Zahe Naseeb"
 const router = useRouter()
   type Cell = {
     mine: boolean
@@ -551,7 +551,7 @@ const router = useRouter()
   const [finalInput, setFinalInput] = useState("")
   const [ending, setEnding] = useState(false)
 
-  const [message, setMessage] = useState("Find all letters!")
+  const [message, setMessage] = useState("Saaray Letters Dhoondo!")
 
   // ===== create board =====
   const createBoard = () => {
@@ -615,7 +615,7 @@ const router = useRouter()
     // 💣 mine
     if (cell.mine) {
       setGameOver(true)
-      setMessage("💣 Mine hit — board reshuffled!")
+      setMessage("💣 Mine hit — Boom, Phir se !")
       setTimeout(() => createBoard(), 400) // letters persist
       setBoard(newBoard)
       return
@@ -635,9 +635,9 @@ const router = useRouter()
 
           if (updated.length === lettersArr.length) {
             setAllFound(true)
-            setMessage("🎉 All letters found! Unscramble the message.")
+            setMessage("🎉 Congratulations Hamna Salik, beghum did it! \nHint: How Lucky")
           } else {
-            setMessage(`Found letter: ${cell.letter}`)
+            setMessage(`Letter mila: ${cell.letter}`)
           }
 
           return updated
@@ -653,7 +653,7 @@ const router = useRouter()
     if (finalInput.toUpperCase().trim() === MESSAGE) {
       setEnding(true)
     } else {
-      alert("Wrong message")
+      alert("No Jee No")
     }
   }
 
@@ -925,7 +925,7 @@ function PuzzleFour({ router }: any) {
       const correct = sequence[nextInput.length - 1] === idx
 
       if (!correct) {
-        setMessage("❌ Wrong tile! Generating new sequence...")
+        setMessage("❌ Wrong tile! Oho Shit xD...")
         setWrongTiles(prev => [...prev, idx])
         setPlayerInput([])
 
@@ -938,7 +938,7 @@ function PuzzleFour({ router }: any) {
       }
 
       if (nextInput.length === sequence.length) {
-        setMessage("🎉 Sequence complete!")
+        setMessage("🎉 Mubarak ho Hamna!")
         setLevelComplete(true)
         setTimeout(startPhaseTwo, 2000)
       }
@@ -950,7 +950,7 @@ function PuzzleFour({ router }: any) {
       const isExpectedSloth = expectedSlothIndex === idx
       
       if (!isSlothInSequence) {
-        setMessage("❌ That's not a sloth in the pattern! Only click the sloths!")
+        setMessage("❌ Ha Ha Ha! Pattern Yaad karo!")
         setWrongTiles(prev => [...prev, idx])
         setPlayerInput([])
         
@@ -963,7 +963,7 @@ function PuzzleFour({ router }: any) {
       }
       
       if (!isExpectedSloth) {
-        setMessage("❌ Wrong sloth order! Remember the pattern sequence!")
+        setMessage("❌ Ha Ha Ha! Pattern Yaad karo!")
         setWrongTiles(prev => [...prev, idx])
         setPlayerInput([])
         
@@ -979,7 +979,7 @@ function PuzzleFour({ router }: any) {
       setPlayerInput(nextInput)
       
       if (nextInput.length === slothSequence.length) {
-        setMessage("🎉 Pattern mastered! All sloths remembered!")
+        setMessage("🎉 Sloths mil gai(not Gay)!")
         setLevelComplete(true)
         setShowAllSloths(true)
         
@@ -1092,10 +1092,9 @@ function PuzzleFour({ router }: any) {
           {/* Phase 2 instructions */}
           {phase === 2 && !started && !levelComplete && (
             <div className="bg-gray-900 p-4 rounded-lg mb-6 max-w-md">
-              <p className="text-lg text-yellow-400 mb-2">⚠️ Pattern Challenge:</p>
+              <p className="text-lg text-yellow-400 mb-2">⚠️ Pattern Challenge Ha HA HA:</p>
               <p className="text-sm text-gray-300 mb-1">• Memorize the <span className="text-emerald-400">SLOTHS (🦥)</span> in complex patterns</p>
-              <p className="text-sm text-gray-300 mb-1">• Ignore the fists (👊)</p>
-              <p className="text-sm text-gray-300">• Patterns include shapes, diagonals, and sequences</p>
+              <p className="text-sm text-gray-300 mb-1">• Ignore the Booms (👊)</p>
               <p className="text-xs text-gray-500 mt-2">Difficulty: {difficulty}/10</p>
             </div>
           )}
@@ -1217,7 +1216,7 @@ function PuzzleFive({ router }: any) {
 
   // ---------------- BOX 1 ----------------
   const handleBox1=()=>{
-    if(answer1.trim().toLowerCase()==="heart"){
+    if(answer1.trim().toLowerCase()==="dil dil"){
       play("/sounds/unlock.mp3")
       setBoxOpened(p=>{const n=[...p]; n[0]=true; return n})
       setStory("Love begins where logic fails.")
@@ -1312,7 +1311,7 @@ function PuzzleFive({ router }: any) {
 
           {!boxOpened[0] ? (
             <>
-              <p className="text-gray-400 mb-2">Symbol of love?</p>
+              <p className="text-gray-400 mb-2">Symbol of love?Dhak Dhak</p>
               <input value={answer1} onChange={e=>setAnswer1(e.target.value)}
                 className="bg-black border border-white p-2 rounded mb-2 text-center"/>
               <button onClick={handleBox1} className="bg-white text-black px-4 py-2 rounded">Unlock</button>
@@ -1330,7 +1329,7 @@ function PuzzleFive({ router }: any) {
 
           {!boxOpened[1] ? (
             <>
-              <p className="text-gray-400 mb-2">Enter the perfect date</p>
+              <p className="text-gray-400 mb-2">Meray Abu na nana abu ko kab message kiya?</p>
               <div className="flex gap-2">
                 <select value={month} onChange={e=>setMonth(e.target.value)} className="bg-black border p-2">
                   <option>MM</option>
