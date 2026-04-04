@@ -2068,334 +2068,184 @@ function PuzzleEight({ router }: any) {
   )
 }
 function PuzzleNine({ router }: any) {
-  const [mousePos, setMousePos] = useState({ x: 0, y: 0 });
   const [password, setPassword] = useState("");
   const [error, setError] = useState("");
-  const [collectedStars, setCollectedStars] = useState<boolean[]>([]);
-  const [usernameChars, setUsernameChars] = useState<string[]>([]);
-  const [allStarsCollected, setAllStarsCollected] = useState(false);
-  const [activeStar, setActiveStar] = useState<number | null>(null);
-  const [answerInput, setAnswerInput] = useState("");
-  const [answerError, setAnswerError] = useState("");
-  const [stars, setStars] = useState<
-    Array<{
-      question: string;
-      answer: string;
-      top: string;
-      left: string;
-      usernameIndex: number;
-    }>
+  const [flowers, setFlowers] = useState<
+    Array<{ top: number; left: number; size: number; delay: number }>
   >([]);
-  const [emojiData, setEmojiData] = useState<{
-    positions: Array<{ top: number; left: number }>;
-    emojis: string[];
-  } | null>(null);
+  const [hearts, setHearts] = useState<
+    Array<{ top: number; left: number; size: number; delay: number; emoji: string }>
+  >([]);
 
-  const targetUsername = "R3fl3ct!0nS3tsM3Fr".split("");
-
-  const questionPool = [
-    { q: "Name of the first Sticker I sent You?", a: "Laila" },
-    { q: "Another word for Confusion", a: "conundrum" },
-    { q: "Name of the second chapter?", a: "baagh" },
-    { q: "Complete the sentence... I dont like you..(hint: see sticky notes)", a: "I Adore You" },
-    { q: "Date: Flowers Biggest (Format DD/MM/YY)", a: "26/12/25" },
-    { q: "What do you call me?", a: "Mian Jee" },
-    { q: "I Love you holds the light of a (Chapter 2)", a: "Thousand Suns" },
-    { q: "First dish she cooked for me (google spelling)", a: "shakshuka" },
-    { q: "Hassaan ki(mehndi)", a: "Beghum" },
-    { q: "The mountain _________ in awake of her smile", a: "crumbles" },
-    { q: "Date: Salam ka Jawab waqai main Jaiz hai (Format DD/MM/YY)", a: "19/04/25" },
-    { q: "Date: Baloon Sweet Creame (Format DD/MM/YY)", a: "23/05/25" },
-    { q: "Date: Khala Niki Sweet Creame, Ghodi (Format DD/MM/YY)", a: "15/08/25" },
-    { q: "Song you sang included in our Video (---_--_--)", a: "tum se hi" },
-    { q: "Shop Name First Necklace (-------)", a: "Haroons" },
-    { q: "Secret word for friends yan dusre log?", a: "Kabootar" },
-    { q: "Most important thing in a relationship for my beghum", a: "respect" },
-    { q: "Jinn kis kamre main hai? xD (------- ----)", a: "Drawing Room" },
-  ];
-
-  // Generate background emojis
+  // 🌸 Generate flowers and 💖 hearts
   useEffect(() => {
-    const emojiList = [
-  // flowers
-  "🌸", "🌼", "🌻", "🌺", "🌷", "🌹", "🌿", "🌱", "🌾", "🌳",
-  // sloths
-  "🦥",
-  // alien
-  "👽", "🛸", "👾", "🤖",
-  // chocolate / sweets
-  "🍫", "🍬", "🍭", "🍪", "🍩", "🍰", "🧁",
-  // fist bump
-  "👊", "🤜", "🤛",
-  // boom / explosion
-  "💥", "💣", "🔥", "💫",
-  // sun, moon, light, stars
-  "☀️", "🌞", "🌙", "🌕", "🌖", "🌗", "🌘", "🌑", "🌒", "🌓", "🌔", "⭐", "🌟", "✨", "☄️", "💡", "🕯️", "🔆", "🔅"
-];
-
-    const positions = Array.from({ length: 120 }).map(() => ({
-      top: Math.random() * 95,
-      left: Math.random() * 95,
+    // Generate flowers
+    const generatedFlowers = Array.from({ length: 25 }).map(() => ({
+      top: Math.random() * 100,
+      left: Math.random() * 100,
+      size: Math.random() * 20 + 20,
+      delay: Math.random() * 5,
     }));
+    setFlowers(generatedFlowers);
 
-    const assignedEmojis = positions.map(() => 
-      emojiList[Math.floor(Math.random() * emojiList.length)]
-    );
-
-    setEmojiData({ positions, emojis: assignedEmojis });
+    // Generate hearts with different romantic emojis
+    const heartEmojis = ['❤️', '💖', '💕', '💗', '💓', '💘', '💝'];
+    const generatedHearts = Array.from({ length: 35 }).map(() => ({
+      top: Math.random() * 100,
+      left: Math.random() * 100,
+      size: Math.random() * 28 + 16,
+      delay: Math.random() * 7,
+      emoji: heartEmojis[Math.floor(Math.random() * heartEmojis.length)],
+    }));
+    setHearts(generatedHearts);
   }, []);
-
-  // Generate stars
-  useEffect(() => {
-    const indices = Array.from({ length: 18 }, (_, i) => i);
-    for (let i = indices.length - 1; i > 0; i--) {
-      const j = Math.floor(Math.random() * (i + 1));
-      [indices[i], indices[j]] = [indices[j], indices[i]];
-    }
-
-    const positions = Array.from({ length: 18 }).map((_, i) => {
-      let top, left;
-      do {
-        top = Math.random() * 80 + 10;
-        left = Math.random() * 80 + 10;
-      } while (top > 35 && top < 65 && left > 35 && left < 65);
-      const qa = questionPool[i % questionPool.length];
-      return {
-        question: qa.q,
-        answer: qa.a,
-        top: `${top}%`,
-        left: `${left}%`,
-        usernameIndex: indices[i],
-      };
-    });
-    setStars(positions);
-    setCollectedStars(new Array(18).fill(false));
-    setUsernameChars(new Array(18).fill("_"));
-  }, []);
-
-  // Mouse move
-  useEffect(() => {
-    const handleMouseMove = (e: MouseEvent) => {
-      setMousePos({ x: e.clientX, y: e.clientY });
-    };
-    window.addEventListener("mousemove", handleMouseMove);
-    return () => window.removeEventListener("mousemove", handleMouseMove);
-  }, []);
-
-  // Check all stars collected
-  useEffect(() => {
-    if (collectedStars.every(Boolean)) {
-      setAllStarsCollected(true);
-    }
-  }, [collectedStars]);
-
-  // Close popup on outside click
-  useEffect(() => {
-    const handleClickOutside = () => {
-      setActiveStar(null);
-      setAnswerInput("");
-      setAnswerError("");
-    };
-    window.addEventListener("click", handleClickOutside);
-    return () => window.removeEventListener("click", handleClickOutside);
-  }, []);
-
-  const handleStarClick = (e: React.MouseEvent, index: number) => {
-    e.stopPropagation();
-    if (collectedStars[index]) return;
-    setActiveStar(index);
-    setAnswerInput("");
-    setAnswerError("");
-  };
-
-  const handleAnswerSubmit = (e: React.FormEvent, index: number) => {
-    e.preventDefault();
-    e.stopPropagation();
-    const star = stars[index];
-    if (answerInput.trim().toLowerCase() === star.answer.toLowerCase()) {
-      const newCollected = [...collectedStars];
-      newCollected[index] = true;
-      setCollectedStars(newCollected);
-
-      const newUsernameChars = [...usernameChars];
-      newUsernameChars[star.usernameIndex] = targetUsername[star.usernameIndex];
-      setUsernameChars(newUsernameChars);
-
-      setActiveStar(null);
-      setAnswerInput("");
-      setAnswerError("");
-    } else {
-      setAnswerError("Incorrect answer. Try again.");
-    }
-  };
 
   const handleLogin = () => {
-    if (!allStarsCollected) {
-      setError("You must find and answer all 18 stars first.");
-      return;
-    }
-    if (password.toLowerCase() === "found") {
+    if (password === "DilbarJani") {
       completePuzzle(9);
       router.push("/reveal");
     } else {
-      setError("Invalid password. The light rejects you.");
+      setError("The garden does not recognize this key 🌙");
     }
   };
 
-  const isStarNearMouse = (star: { top: string; left: string }) => {
-    const starX = (parseFloat(star.left) / 100) * window.innerWidth;
-    const starY = (parseFloat(star.top) / 100) * window.innerHeight;
-    const dist = Math.hypot(mousePos.x - starX, mousePos.y - starY);
-    return dist < 150;
-  };
-
   return (
-    <main className="relative h-screen bg-black text-white overflow-hidden cursor-none">
-      {/* Torch overlay */}
-      <div
-        className="pointer-events-none absolute inset-0 z-20"
-        style={{
-          background: `radial-gradient(circle 150px at ${mousePos.x}px ${mousePos.y}px, rgba(0,0,0,0) 0%, rgba(0,0,0,0.95) 70%, rgba(0,0,0,1) 100%)`,
-        }}
-      />
+    <main className="relative h-screen overflow-hidden bg-gradient-to-br from-pink-100 via-rose-200 to-pink-300 flex items-center justify-center">
 
-      {/* Background emojis */}
-      {emojiData && emojiData.positions.map((pos, i) => (
+      {/* 🌸 Floating Flowers */}
+      {flowers.map((flower, i) => (
         <div
-          key={`emoji-${i}`}
-          className="absolute text-2xl select-none"
+          key={`flower-${i}`}
+          className="absolute animate-float"
           style={{
-            top: pos.top + "%",
-            left: pos.left + "%",
-            zIndex: 0,
-            opacity: 0.3,
+            top: `${flower.top}%`,
+            left: `${flower.left}%`,
+            fontSize: `${flower.size}px`,
+            animationDelay: `${flower.delay}s`,
+            opacity: 0.7,
           }}
         >
-          {emojiData.emojis[i]}
+          🌸
         </div>
       ))}
 
-      {/* Stars */}
-      {stars.map((star, i) => {
-        const near = isStarNearMouse(star);
-        const collected = collectedStars[i];
-        if (!near && !collected) return null;
-
-        return (
-          <div
-            key={i}
-            onClick={(e) => handleStarClick(e, i)}
-            className={`absolute text-3xl transition-all duration-300 cursor-pointer ${
-              collected ? "text-yellow-400" : "text-white"
-            }`}
-            style={{
-              top: star.top,
-              left: star.left,
-              opacity: collected ? 1 : near ? 1 : 0,
-              transform: collected ? "scale(1.2)" : "scale(1)",
-              zIndex: 50,
-            }}
-          >
-            {collected ? "⭐" : "⭐"}
-          </div>
-        );
-      })}
-
-      {/* Question popup */}
-      {activeStar !== null && (
+      {/* 💖 Floating Hearts */}
+      {hearts.map((heart, i) => (
         <div
-          className="absolute z-60 bg-gray-900 p-4 rounded-lg border border-gray-700 shadow-xl"
+          key={`heart-${i}`}
+          className="absolute animate-float-heart"
           style={{
-            top: stars[activeStar].top,
-            left: stars[activeStar].left,
-            transform: "translate(20px, -50%)",
-            zIndex: 60,
+            top: `${heart.top}%`,
+            left: `${heart.left}%`,
+            fontSize: `${heart.size}px`,
+            animationDelay: `${heart.delay}s`,
+            opacity: 0.8,
+            filter: "drop-shadow(0 0 4px rgba(255,80,120,0.5))",
           }}
-          onClick={(e) => e.stopPropagation()}
         >
-          <p className="text-white mb-2">{stars[activeStar].question}</p>
-          <form onSubmit={(e) => handleAnswerSubmit(e, activeStar)}>
-            <input
-              autoFocus
-              type="text"
-              value={answerInput}
-              onChange={(e) => setAnswerInput(e.target.value)}
-              className="bg-black border border-gray-700 p-2 rounded w-full text-white"
-            />
-            {answerError && <p className="text-red-400 text-sm mt-1">{answerError}</p>}
-            <button
-              type="submit"
-              className="mt-2 bg-white text-black px-4 py-2 rounded w-full font-bold"
-            >
-              Submit
-            </button>
-          </form>
+          {heart.emoji}
         </div>
-      )}
+      ))}
 
-      {/* Login form */}
-      <div
-        className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 bg-gray-900/80 p-8 rounded-lg border border-gray-700 w-96 backdrop-blur-sm"
-        style={{ zIndex: 40 }}
-        onClick={(e) => e.stopPropagation()}
-      >
-        <h1 className="text-4xl font-bold mb-8 text-center">Final Gate</h1>
-        <p className="text-gray-400 mb-6 text-center">
-          Find the 18 stars and answer their questions to reveal the username.
+      {/* ✨ Soft Glow Overlay */}
+      <div className="absolute inset-0 bg-white/30 backdrop-blur-3xl" />
+
+      {/* 💌 Romantic Login Card */}
+      <div className="relative z-10 bg-white/60 backdrop-blur-xl p-10 rounded-3xl shadow-2xl w-96 text-center border border-white/40 transform transition-all duration-300 hover:scale-105 hover:shadow-pink-300/50">
+        
+        {/* Decorative heart line */}
+        <div className="text-pink-400 text-xl mb-2 animate-pulse">
+          💖 💗 💖
+        </div>
+
+        <h1 className="text-4xl font-bold text-pink-700 mb-2">
+          Final Gate 🌷❤️
+        </h1>
+        
+        <p className="text-pink-500 text-sm italic mb-4">
+          "Where love writes the final verse"
         </p>
 
-        <div className="mb-6">
-          <div className="text-sm text-gray-500 mb-2">Username (revealed):</div>
-          <div className="flex flex-wrap justify-center gap-1">
-            {usernameChars.map((char, i) => (
-              <div
-                key={i}
-                className="w-8 h-8 bg-gray-800 border border-gray-600 flex items-center justify-center text-lg font-bold"
-              >
-                {char}
-              </div>
-            ))}
-          </div>
-        </div>
+        <p className="text-gray-700 mb-6 leading-relaxed">
+          Beghum Jee You've reached the End of the Path. The secret word is whispered by the blossoms. What do they say?
+          <span className="block mt-2 font-medium text-pink-600">
+            What is the secret word that unlocks Our Love?
+          </span>
+        </p>
 
-        <div className="mb-4 text-center">
-          <div className="text-sm text-gray-500">Stars collected:</div>
-          <div className="text-2xl font-bold">
-            {collectedStars.filter(Boolean).length} / 18
-          </div>
-          {allStarsCollected && (
-            <p className="text-green-400 mt-2">All stars collected! Enter the password.</p>
-          )}
+        {/* Romantic divider */}
+        <div className="flex justify-center gap-2 text-pink-300 text-sm mb-4">
+          <span>✧</span> <span>❤️</span> <span>✧</span> <span>💕</span> <span>✧</span>
         </div>
 
         <input
           type="password"
-          placeholder="Password"
+          placeholder="💗 Whisper the magic word..."
           value={password}
           onChange={(e) => setPassword(e.target.value)}
-          className="w-full p-3 mb-4 bg-black border border-gray-700 rounded text-white"
+          className="w-full p-3 rounded-xl border border-pink-200 bg-white/80 focus:outline-none focus:ring-2 focus:ring-pink-400 focus:border-transparent transition-all duration-300 text-center placeholder:text-pink-300"
         />
-        {error && <p className="text-red-400 mb-4">{error}</p>}
+
+        {error && (
+          <p className="text-rose-500 text-sm mt-3 mb-2 animate-shake">
+            {error} 💔
+          </p>
+        )}
+
         <button
           onClick={handleLogin}
-          className="w-full bg-white text-black p-3 rounded font-bold hover:bg-gray-200"
+          className="w-full bg-gradient-to-r from-pink-500 to-rose-500 hover:from-pink-600 hover:to-rose-600 text-white font-bold py-3 rounded-xl transition-all duration-300 shadow-lg flex items-center justify-center gap-2 mt-4"
         >
-          Unlock
+          <span>🌸</span> Enter the Garden of Love <span>💖</span>
         </button>
+
+        {/* Romantic footer message */}
+        <p className="text-xs text-pink-400 mt-6 italic">
+          "Every love story is beautiful, but ours is my favorite."
+        </p>
       </div>
 
-      {/* Dev skip button */}
-      {process.env.NODE_ENV === "development" && (
-        <button
-          onClick={() => {
-            completePuzzle(9);
-            router.push("/reveal");
-          }}
-          className="fixed bottom-4 right-4 z-50 bg-yellow-500 text-black px-4 py-2 rounded-lg font-bold"
-        >
-          ⏭️ Skip (Dev)
-        </button>
-      )}
+      {/* 🌿 Enhanced Animations */}
+      <style jsx>{`
+        @keyframes float {
+          0% { transform: translateY(0px) scale(1); }
+          50% { transform: translateY(-20px) scale(1.05); }
+          100% { transform: translateY(0px) scale(1); }
+        }
+
+        @keyframes floatHeart {
+          0% { 
+            transform: translateY(0px) rotate(0deg) scale(1); 
+            opacity: 0.6;
+          }
+          50% { 
+            transform: translateY(-30px) rotate(8deg) scale(1.15); 
+            opacity: 1;
+          }
+          100% { 
+            transform: translateY(0px) rotate(0deg) scale(1); 
+            opacity: 0.6;
+          }
+        }
+
+        @keyframes shake {
+          0%, 100% { transform: translateX(0); }
+          25% { transform: translateX(-5px); }
+          75% { transform: translateX(5px); }
+        }
+
+        .animate-float {
+          animation: float 6s ease-in-out infinite;
+        }
+
+        .animate-float-heart {
+          animation: floatHeart 7s ease-in-out infinite;
+        }
+
+        .animate-shake {
+          animation: shake 0.3s ease-in-out 0s 2;
+        }
+      `}</style>
     </main>
   );
 }
