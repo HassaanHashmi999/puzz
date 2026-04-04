@@ -2101,7 +2101,7 @@ function PuzzleNine({ router }: any) {
   }, []);
 
   const handleLogin = () => {
-    if (password === "DilbarJani9") {
+    if (password === "DilbarJani05042025") {
       completePuzzle(9);
       router.push("/reveal");
     } else {
